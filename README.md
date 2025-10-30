@@ -27,8 +27,8 @@ project/
 
 2. **Create a virtual environment**
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   py -3.12 -m venv env 
+   source env/Scripts/activate  # On Windows: venv\Scripts\activate
    ```
 
 3. **Install dependencies**
@@ -52,11 +52,9 @@ project/
 
 ## API Endpoints
 
-### 1. Root Endpoint
-- **GET** `/`
-- Returns API status
 
-### 2. Chat Endpoint
+
+### 1. Chat Endpoint
 - **POST** `/chat`
 - Request body:
   ```json
@@ -71,8 +69,9 @@ project/
   }
   ```
 
-### 3. Upload PDF
+### 2. Upload PDF
 - **POST** `/upload`
+- Additional Feature - document upload andchat with it.
 - Upload a PDF file to add to the knowledge base
 - Form data: `file` (PDF file)
 - Response:
@@ -83,9 +82,7 @@ project/
   }
   ```
 
-### 4. Health Check
-- **GET** `/health`
-- Returns health status
+
 
 ## Features
 
@@ -109,21 +106,35 @@ To run in development mode with auto-reload:
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-## Testing
+---
 
-Test the API using curl:
+## Notes
 
-```bash
-# Chat
-curl -X POST "http://localhost:8000/chat" \
-  -H "Content-Type: application/json" \
-  -d '{"query": "Hello!"}'
+I have attached my `.env` file for direct testing and quick setup.
 
-# Upload PDF
-curl -X POST "http://localhost:8000/upload" \
-  -F "file=@path/to/your/document.pdf"
-```
+---
 
-## License
+## Scope of Improvement
 
-MIT
+If given more time, the following areas can be improved and expanded:
+
+- **Summarization Enhancement**  
+  The summarization module can be made more detailed and context-aware to provide richer and more accurate summaries of retrieved content.
+
+- **Intent Layer Improvement**  
+  The intent classification can be enhanced by adding more nodes and intermediate layers for better accuracy and dynamic response handling.
+
+- **Document Management APIs**  
+  Additional APIs such as **delete**, **update**, and **list** can be implemented to manage the lifecycle of documents within the knowledge base more efficiently.
+
+- **Streaming LLM Responses**  
+  Implementing a streaming response mechanism will enable real-time responses from the LLM, providing a smoother and more interactive chat experience.
+
+---
+
+## Conclusion
+
+This project was built in a short span of **2–3 hours**.  
+During this time, I focused on building a clean and modular structure that demonstrates the RAG pipeline effectively.  
+
+There is still room for improvement — with more time, features such as better summarization, improved intent detection, and enhanced document handling can be developed further to make the system more robust and production-ready.

@@ -28,7 +28,8 @@ project/
 2. **Create a virtual environment**
    ```bash
    py -3.12 -m venv env 
-   source env/Scripts/activate  # On Windows: venv\Scripts\activate
+   source env/Scripts/activate  
+   On Windows: venv\Scripts\activate
    ```
 
 3. **Install dependencies**
@@ -39,8 +40,8 @@ project/
 4. **Create a `.env` file**
    ```env
    GOOGLE_API_KEY=your_google_api_key_here
-   GOOGLE_GEMINI_MODEL=gemini-pro
-   GOOGLE_GEMINI_EMBEDDING_MODEL=models/embedding-001
+   GOOGLE_GEMINI_MODEL=gemini-2.0-flash
+   GOOGLE_GEMINI_EMBEDDING_MODEL=gemini-embedding-001
    ```
 
 5. **Run the application**
@@ -50,8 +51,18 @@ project/
 
    The API will be available at `http://localhost:8000`
 
-## API Endpoints
+---
 
+## Ingestion
+
+If you want to ingest multiple PDFs and enable question-answering:
+
+1. Place your PDF files in the `pdf_data` folder.  
+2. Run the `ingest.py` script. All PDFs in the folder will be vectorized automatically.  
+3. After ingestion, you can use the `/chat` endpoint to ask questions based on the uploaded PDFs.
+
+
+## API Endpoints
 
 
 ### 1. Chat Endpoint

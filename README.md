@@ -51,6 +51,8 @@ project/
 
    The API will be available at `http://localhost:8000`
 
+   - Can check the api at /docs or in postment also
+
 ---
 
 ## Ingestion

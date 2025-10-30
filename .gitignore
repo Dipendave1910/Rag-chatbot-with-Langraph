@@ -1,0 +1,8 @@
+.env
+chromadb/
+__pycache__/
+*.pyc
+*.db
+.DS_Store
+pdf_data/
+env/

@@ -1,68 +1,129 @@
-# Simple RAG Chatbot with LangGraph and LangChain
+# RAG Chatbot API
 
-## Overview
-This project is a simple Retrieval-Augmented Generation (RAG) chatbot using:
-- **Google Gemini API** (LLM & Embeddings)
-- **ChromaDB** (vector store)
-- **LangChain** & **LangGraph** (retrieval & intent logic)
-- **FastAPI** (backend)
+A FastAPI-based chatbot with RAG (Retrieval-Augmented Generation) capabilities using LangGraph and ChromaDB.
 
 ## Project Structure
-- `pdf_data/`: Place your 3 PDFs here.
-- `ingest.py`: One-time script to ingest PDFs, create embeddings, and store in ChromaDB.
-- `main.py`: Runs FastAPI server for chatbot.
 
-## Setup Instructions
-1. Clone this repo or unzip files.
-2. Create a `.env` file (see `.env.example`) and add your Google Gemini API key.
-3. Install requirements and setup env:
+```
+project/
+├── app/
+│   ├── __init__.py
+│   ├── main.py              # FastAPI application
+│   ├── models.py            # Pydantic models
+│   ├── config.py            # Configuration settings
+│   └── chatbot/
+│       ├── __init__.py
+│       ├── bot.py           # Main chatbot class
+│       ├── graph.py         # LangGraph workflow
+│       └── nodes.py         # Graph node functions
+├── .env                     # Environment variables
+├── requirements.txt         # Python dependencies
+└── README.md               # This file
+```
+
+## Setup
+
+1. **Clone the repository**
+
+2. **Create a virtual environment**
    ```bash
    python -m venv venv
-   source venv/bin/activate  # or venv\Scripts\activate on Windows
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies**
+   ```bash
    pip install -r requirements.txt
    ```
-4. Place your PDFs in the `pdf_data/` folder.
 
-## Usage
-**Ingest PDFs:**
-```bash
-python ingest.py
-```
+4. **Create a `.env` file**
+   ```env
+   GOOGLE_API_KEY=your_google_api_key_here
+   GOOGLE_GEMINI_MODEL=gemini-pro
+   GOOGLE_GEMINI_EMBEDDING_MODEL=models/embedding-001
+   ```
 
-**Run the chatbot:**
-```bash
-uvicorn main:app --reload
-```
+5. **Run the application**
+   ```bash
+   uvicorn app.main:app --reload
+   ```
 
----
+   The API will be available at `http://localhost:8000`
 
 ## API Endpoints
 
-### /chat
-Send a user query (e.g., general, FAQ, or summarization):
-```json
-POST /chat
-{
-  "query": "What is the main topic of the PDF?"
-}
-```
-Returns a response from the bot, choosing how to handle based on intent.
+### 1. Root Endpoint
+- **GET** `/`
+- Returns API status
 
-### /upload
-Upload a new PDF via multipart-form POST:
+### 2. Chat Endpoint
+- **POST** `/chat`
+- Request body:
+  ```json
+  {
+    "query": "Your question here"
+  }
+  ```
+- Response:
+  ```json
+  {
+    "response": "Chatbot answer"
+  }
+  ```
+
+### 3. Upload PDF
+- **POST** `/upload`
+- Upload a PDF file to add to the knowledge base
+- Form data: `file` (PDF file)
+- Response:
+  ```json
+  {
+    "message": "Uploaded and embedded filename.pdf",
+    "chunks_added": 42
+  }
+  ```
+
+### 4. Health Check
+- **GET** `/health`
+- Returns health status
+
+## Features
+
+- **Intent Classification**: Automatically classifies queries as greeting, FAQ, or summarization
+- **RAG Pipeline**: Uses ChromaDB for vector storage and retrieval
+- **PDF Processing**: Upload PDFs to expand the knowledge base
+- **LangGraph Workflow**: Structured conversation flow with conditional routing
+- **Google Gemini Integration**: Uses Gemini for embeddings and chat
+
+## Configuration
+
+Edit `app/config.py` to modify:
+- Chunk size and overlap for text splitting
+- Number of documents to retrieve (k parameter)
+- Model names and directories
+
+## Development
+
+To run in development mode with auto-reload:
 ```bash
-curl -F "file=@yourdoc.pdf" http://127.0.0.1:8000/upload
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
-Returns json with status and number of chunks added. After uploading, you may chat about the new document immediately.
 
----
-All credentials & secrets are stored in `.env` (excluded from git).
+## Testing
 
----
-**If errors occur, check:**
-- Google API key is valid
-- PDFs are in the expected folder (unless uploading)
-- All python dependencies are installed
+Test the API using curl:
 
----
-For further help or issues, contact the project maintainer.
+```bash
+# Chat
+curl -X POST "http://localhost:8000/chat" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "Hello!"}'
+
+# Upload PDF
+curl -X POST "http://localhost:8000/upload" \
+  -F "file=@path/to/your/document.pdf"
+```
+
+## License
+
+MIT

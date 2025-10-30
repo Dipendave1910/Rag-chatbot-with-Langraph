@@ -16,7 +16,7 @@ class PDFHandler:
         self.save_dir = save_dir
         try:
             self.embedder = GoogleGenerativeAIEmbeddings(
-                model="gemini-embedding-001",
+                model=os.environ["GOOGLE_GEMINI_EMBEDDING_MODEL"],
                 google_api_key=os.environ["GOOGLE_API_KEY"]
             )
         except Exception as e:
